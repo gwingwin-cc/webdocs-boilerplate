@@ -44,6 +44,19 @@ a {
   flex-grow: 1;
 }
 
+.main-tech-wrap {
+  margin: 0 auto;
+  max-width: 1024px;
+}
+
+@media (max-width: 1015px) {
+.main-tech-wrap {
+  margin: 0 auto;
+  max-width: 520px;
+}
+}
+
+
 .main-tech-card {
   max-width: 280px;
 }
@@ -61,5 +74,29 @@ a {
 
 .bleed-mdx img {
   width: 60vw;
+}
+
+.code-snippet {
+  padding: 12px;
+  border-radius: 12px;
+  color: white;
+  background-color: #111111;
+  font-family: monospace;
+  & pre {
+    margin-bottom:0
+  }
+}
+
+.menu-link-label {
+  color: #2c2c2c !important;
+  padding-top: .25rem;
+  padding-bottom: .25rem;
+  font-size: 95%;
+}
+
+.doc-div {
+  height: 85vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 

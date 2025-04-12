@@ -1,10 +1,12 @@
-import {Button, Col, Container, Row} from "react-bootstrap";
-import {ReactElement, useCallback, useState} from "react";
+import {Button, Col, Container, Modal, Offcanvas, Row} from "react-bootstrap";
+import {ReactElement, useEffect, useMemo, useState} from "react";
 import {Layout} from "./layout";
 import Link from "next/link";
 import {listOfContents} from "./meta";
+import {List} from "react-bootstrap-icons";
+import {usePathname} from "next/navigation";
 import {useRouter} from "next/router";
-import {ChevronDown, ChevronRight} from "react-feather";
+import {useSearchParams} from "next/dist/client/components/navigation";
 
 /**
  *
@@ -17,16 +19,23 @@ interface LayoutProps {
 }
 
 export const DocLayout = (props: LayoutProps) => {
-    const [showMenu, setShowMenu] = useState(false);
+    const [showOutlineModal, setShowOutlineModal] = useState(false);
     return <Layout>
-        <Container>
-            <div className={'text-end pe-2 pt-2 d-sm-block d-md-none'}>
-                <Button onClick={() => setShowMenu(true)} variant={'dark'}>Menu 📄</Button>
-            </div>
+        <Container fluid={"xl"}>
+            <OutlineModal show={showOutlineModal} handleClose={setShowOutlineModal}/>
+            <Row className={'d-md-none'}>
+                <Col>
+                    <Col>
+                        <Button className={'mt-2'} variant={'outline-primary'} onClick={() => {
+                            setShowOutlineModal(true)
+                        }}>Menu <List/></Button>
+                    </Col>
+                </Col>
+            </Row>
             <Row>
-                <Col className={'d-md-block d-sm-none d-none '} md={3} xl={2}
+                <Col md={3} lg={3} xl={3} xxl={3} className={'d-none d-md-block'}
                      style={{borderRight: '1px solid gainsboro'}}>
-                    <div className="flex-shrink-0 p-3 bg-white">
+                    <div className="flex-shrink-0 p-3 bg-white doc-div">
                         <ul className="list-unstyled ps-0">
                             {listOfContents.map((item, i) => {
                                 return <MenuItemComponent menuItem={item} key={i} className="mb-1"/>
@@ -34,35 +43,18 @@ export const DocLayout = (props: LayoutProps) => {
                         </ul>
                     </div>
                 </Col>
-                <Col style={{minHeight: '85vh'}} className={''}>
-                    <div className={'p-2 pt-4'}>
+                <Col sm={12} xs={12} md={9} style={{height: '85vh'}}>
+                    <div className={'p-2 pt-4 doc-div'}>
                         <Row>
-                            <Col md={8} xs={12}>
+                            <Col sm={10} md={10} xs={12}>
                                 {props.children}
                             </Col>
                         </Row>
                     </div>
                 </Col>
             </Row>
-
-            {showMenu ?
-                <div className={'position-fixed w-100 h-75 bg-white'}
-                     style={{left: 0, top: 120, border: '3px solid gray', overflowY: 'scroll'}}>
-                    <div className={'text-end pe-2 pt-2'}>
-                        <Button onClick={() => setShowMenu(false)} variant={'dark'}>❌</Button>
-                    </div>
-                    <Col className={'h-100'}>
-                        <div className="flex-shrink-0 p-3">
-                            <ul className="list-unstyled w-75 ms-auto ps-0">
-                                {listOfContents.map((item, i) => {
-                                    return <MenuItemComponent menuItem={item} key={i} className="mb-1"/>
-                                })}
-                            </ul>
-                        </div>
-                    </Col>
-                </div> : null
-            }
         </Container>
+
     </Layout>
 }
 
@@ -79,82 +71,28 @@ interface MenuItemProp {
 }
 
 const MenuItemComponent = (props: MenuItemProp) => {
-    const router = useRouter()
-    const [expand, setExpand] = useState(false)
-    const isMatchPatch = useCallback(() => {
-        if (router.asPath.indexOf(props.menuItem.path) > -1) {
-            return true;
-        } else {
-            return false
-        }
-    }, [router.asPath, props.menuItem.path])
-
-    const renderIcon = useCallback(() => {
-        if (props.menuItem.type === 'group' && expand) {
-            return <ChevronDown/>;
-        }
-        if (props.menuItem.type === 'list' || props.menuItem.type === 'group') {
-            if (router.asPath.indexOf(props.menuItem.path) > -1) {
-                return <ChevronDown/>;
-            } else {
-                return <ChevronRight/>
-            }
-        }
-        return '';
-    }, [props.menuItem.type, props.menuItem.path, expand, router.asPath])
-
-    const renderChild = useCallback(() => {
-        if (props.menuItem.type === 'group' && expand) {
-            return true
-        }
-        if (props.menuItem.type === 'list' || props.menuItem.type === 'group'
-        ) {
-            return router.asPath.indexOf(props.menuItem.path) > -1;
-        }
-        return false;
-    }, [props.menuItem.type, props.menuItem.path, expand, router.asPath])
-
-
+    const currentPath = usePathname()
+    const { asPath } = useRouter()
     return (
-        <li className={(props.className ?? '')}>
-            {
-                props.menuItem.type === 'group' ?
-                    <>
-                        <Link href={'#'} onClick={() => {
-                            setExpand(true
-                            )
-                        }
-                        }>
-                            <span
-                                className={`btn btn-toggle align-items-center rounded ${isMatchPatch() ? 'fw-bold text-primary' : ''}`}
-                                aria-expanded="true">
-                                                  {props.menuItem.label} {renderIcon()}
-                            </span>
-                        </Link>
-                        {
-                            renderChild() ? <ul>
-                                    {
-                                        props.menuItem.list.map((nestItem: MenuItem, nestItemKey: number) => {
-                                            return <MenuItemComponent key={nestItemKey}
-                                                                      menuItem={nestItem}/>
-                                        })
-                                    }
-                                </ul>
-                                : null
-                        }
-
-                    </>
-                    : null
-            }
+        <li className={props.className}>
             {
                 props.menuItem.type === 'link' ?
                     (
                         <Link href={props.menuItem.path ? '/docs/' + props.menuItem.path : '#'}>
-                            <span
-                                className={`btn btn-toggle align-items-center rounded ${isMatchPatch() ? 'fw-bold text-primary' : ''}`}
-                                aria-expanded="true">
-                                                    {props.menuItem.label}
-                                                </span>
+                                            <div className="align-items-center rounded">
+                                                {
+                                                    currentPath == (props.menuItem.path ? '/docs/' + props.menuItem.path : '#')
+                                                        ||
+                                                    asPath == (props.menuItem.path ? '/docs/' + props.menuItem.path : '#')
+                                                        ?
+                                                        <div className={'menu-link-label'}>
+                                                            <b>{props.menuItem.label}</b>
+                                                        </div>:
+                                                        <div className={'menu-link-label'}>
+                                                            {props.menuItem.label}
+                                                        </div>
+                                                }
+                                            </div>
                         </Link>
                     ) : null
             }
@@ -162,27 +100,52 @@ const MenuItemComponent = (props: MenuItemProp) => {
                 props.menuItem.type === 'list' ?
                     <>
                         <Link href={props.menuItem.path ? '/docs/' + props.menuItem.path : '#'}>
-                            <span
-                                className={`btn btn-toggle align-items-center rounded ${isMatchPatch() ? 'fw-bold text-primary' : ''}`}
-                                aria-expanded="true">
-                                                  {props.menuItem.label} {renderIcon()}
-                            </span>
+                            <div className="align-items-center rounded ">
+                                {
+                                    currentPath == (props.menuItem.path ? '/docs/' + props.menuItem.path : '#')
+                                    ||
+                                    asPath == (props.menuItem.path ? '/docs/' + props.menuItem.path : '#') ?
+                                        <div className={'menu-link-label'}>
+                                            <b>{props.menuItem.label}</b>
+                                        </div>:
+                                        <div className={'menu-link-label'}>
+                                            {props.menuItem.label}
+                                        </div>
+                                }
+                            </div>
                         </Link>
-                        {
-                            renderChild() ? <ul>
-                                    {
-                                        props.menuItem.list.map((nestItem: MenuItem, nestItemKey: number) => {
-                                            return <MenuItemComponent key={nestItemKey}
-                                                                      menuItem={nestItem}/>
-                                        })
-                                    }
-                                </ul>
-                                : null
-                        }
-
+                        <ul>
+                            {
+                                props.menuItem.list.map((nestItem: MenuItem, nestItemKey: number) => {
+                                    return <MenuItemComponent key={nestItemKey}
+                                                              menuItem={nestItem}></MenuItemComponent>
+                                })
+                            }
+                        </ul>
                     </>
                     : null
             }
         </li>
     )
+}
+
+const OutlineModal = (props: { show: boolean, handleClose: (s: boolean) => void }) => {
+    return <>
+        <Offcanvas show={props.show} onHide={() => {
+            props.handleClose(false)
+        }}>
+            <Offcanvas.Header closeButton>
+                <Offcanvas.Title>Menu</Offcanvas.Title>
+            </Offcanvas.Header>
+            <Offcanvas.Body>
+                <div className="flex-shrink-0 p-3 bg-white">
+                    <ul className="list-unstyled ps-0">
+                        {listOfContents.map((item, i) => {
+                            return <MenuItemComponent menuItem={item} key={i} className="mb-1"/>
+                        })}
+                    </ul>
+                </div>
+            </Offcanvas.Body>
+        </Offcanvas>
+    </>
 }

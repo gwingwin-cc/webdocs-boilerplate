@@ -1,7 +1,7 @@
-import '../styles/globals.css'
 import type {AppProps} from 'next/app'
 // add bootstrap css
 import 'bootstrap/dist/css/bootstrap.css'
+import '../styles/globals.css'
 import {ReactElement, ReactNode} from "react";
 import {NextPage} from "next";
 // own css files here
