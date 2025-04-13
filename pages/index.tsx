@@ -21,18 +21,15 @@ export default function Home() {
                                 height={90}
                             />
                     </Navbar.Brand>
-                    <Navbar.Toggle/>
-                    <Navbar.Collapse className="justify-content-end">
-                        <Navbar.Text>
-                            <div className={'d-md-flex d-inline-block  gap-1 gap-md-3'}>
-                            <Link href={'/docs'}>
-                                <Button variant={"primary"} className={'fw-bolder me-3'}>Docs <BookOpen/></Button>
-                            </Link>
-                            <Link href={'https://www.youtube.com/@KawinSirikhanarat'}><Youtube size={40}></Youtube></Link>
-                            <Link className={'ms-2'} href={'https://github.com/gwingwin-cc'}><GitHub size={36}></GitHub></Link>
-                            </div>
-                        </Navbar.Text>
-                    </Navbar.Collapse>
+                    <Navbar.Text>
+                        <div className={'d-md-flex d-inline-block  gap-1 gap-md-3'}>
+                        <Link href={'/docs'}>
+                            <Button variant={"primary"} className={'fw-bolder me-3'}>Docs <BookOpen/></Button>
+                        </Link>
+                        <Link href={'https://www.youtube.com/@KawinSirikhanarat'}><Youtube size={40}></Youtube></Link>
+                        <Link className={'ms-2'} href={'https://github.com/gwingwin-cc'}><GitHub size={36}></GitHub></Link>
+                        </div>
+                    </Navbar.Text>
                 </Container>
             </Navbar>
 
