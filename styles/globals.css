@@ -95,7 +95,8 @@ a {
 }
 
 .doc-div {
-  height: 85vh;
+  scrollbar-width: none;
+  height: 90vh;
   overflow-y: scroll;
   overflow-x: hidden;
 }
