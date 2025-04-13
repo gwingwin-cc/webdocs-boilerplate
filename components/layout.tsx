@@ -35,7 +35,7 @@ export const Layout = (props: LayoutProps) => {
                 <Navbar.Collapse className="justify-content-end ">
                     <Navbar.Text>
                         <div className={'d-flex gap-3'}>
-                            <Link href={'https://www.youtube.com/@KawinSirikhanarat'}><Youtube size={40}></Youtube></Link>
+                            <Link href={'https://www.youtube.com/@kawin_s'}><Youtube size={40}></Youtube></Link>
                             <Link className={'ms-2'} href={'https://github.com/gwingwin-cc'}><GitHub size={36}></GitHub></Link>
                         </div>
                     </Navbar.Text>
