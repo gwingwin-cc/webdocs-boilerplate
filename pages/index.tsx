@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
-import {Button, Card, Container, Navbar} from "react-bootstrap";
+import {Button, Card, Container, Navbar, Offcanvas} from "react-bootstrap";
 import Link from "next/link";
 import {ArrowRight, BookOpen, GitHub, Youtube} from "react-feather";
 

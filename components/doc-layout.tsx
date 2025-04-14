@@ -131,7 +131,7 @@ const MenuItemComponent = (props: MenuItemProp) => {
 
 const OutlineModal = (props: { show: boolean, handleClose: (s: boolean) => void }) => {
     return <>
-        <Offcanvas show={props.show} onHide={() => {
+        <Offcanvas style={{height: '100%', width: '70%'}} show={props.show} onHide={() => {
             props.handleClose(false)
         }}>
             <Offcanvas.Header closeButton>
