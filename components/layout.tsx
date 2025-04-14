@@ -31,16 +31,12 @@ export const Layout = (props: LayoutProps) => {
                         <h3 className={'text-black fw-bolder d-inline-block d-sm-inline-block d-none'}>Documentations</h3>
                     </Navbar.Text>
                 </Navbar.Brand>
-                <Navbar.Toggle />
-                <Navbar.Collapse className="justify-content-end ">
-                    <Navbar.Text>
-                        <div className={'d-flex gap-3'}>
-                            <Link href={'https://www.youtube.com/@kawin_s'}><Youtube size={40}></Youtube></Link>
-                            <Link className={'ms-2'} href={'https://github.com/gwingwin-cc'}><GitHub size={36}></GitHub></Link>
-                        </div>
-                    </Navbar.Text>
-                </Navbar.Collapse>
-
+                <Navbar.Text>
+                    <div className={'d-flex gap-3'}>
+                        <Link href={'https://www.youtube.com/@kawin_s'}><Youtube size={40}></Youtube></Link>
+                        <Link className={'ms-2'} href={'https://github.com/gwingwin-cc'}><GitHub size={36}></GitHub></Link>
+                    </div>
+                </Navbar.Text>
             </Container>
         </Navbar>
         <Head>
